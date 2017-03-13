@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
+using System;
 
 namespace SpotiSyncWeb.Infrastructure.Models
 {
@@ -23,18 +24,21 @@ namespace SpotiSyncWeb.Infrastructure.Models
 
         public async void NotifyTrackChange(TrackEvent track)
         {
-           
+            if (socket.State == WebSocketState.Open)
+            {
+                string json = JsonConvert.SerializeObject(track);
+                var buff = new ArraySegment<byte>(Encoding.UTF8.GetBytes(json));
+                await socket.SendAsync(buff, WebSocketMessageType.Binary, true, source.Token);
+            }           
         }        
 
-        public async void Connect(WebSocket socket)
+        public void Connect(WebSocket socket)
         {
             this.socket = socket;            
         }
 
         public void Dispose()
-        {
-            
-
+        { 
             throw new NotImplementedException();
         }
     }

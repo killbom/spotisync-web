@@ -16,6 +16,7 @@ namespace SpotiSyncWeb.Infrastructure.Services
 
         public static void UseSocketService(this IApplicationBuilder app)
         {
+            app.UseWebSockets();
             app.Use(async (http, next) =>
             {
                 if (http.WebSockets.IsWebSocketRequest)

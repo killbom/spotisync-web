@@ -24,7 +24,7 @@ namespace SpotiSyncWeb.Infrastructure.Services
 
         public Session StartNew(SocketUser host)
         {
-            if (sessions.ContainsKey(host.Session.Id))
+            if (host.Session != null && sessions.ContainsKey(host.Session?.Id))
             {
                 foreach (var listener in sessions[host.Session.Id].GetListeners())
                 {
@@ -54,10 +54,7 @@ namespace SpotiSyncWeb.Infrastructure.Services
             var user = users.Get(userId);
 
             // Manage the websocket
-            new Task(() =>
-            {
-                user.Connect(sender as WebSocket);
-            }).Start();
+            user.Connect(sender as WebSocket);
         }
     }
 }

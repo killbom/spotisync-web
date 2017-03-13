@@ -23,7 +23,7 @@ namespace SpotiSyncWeb.Controllers
 
         // GET api/session/new
         [HttpPost("new")]
-        public User CreateSession([FromBody]string name)
+        public User New([FromBody]string name)
         {
             return users.CreateNew(name);
         }
