@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SpotiSyncWeb.Infrastructure.Models
 {
     public class Session
     {
+        public TrackEvent CurrentTrack;
+
         public Session(SocketUser host)
         {
             this.Host = host;
@@ -25,13 +29,12 @@ namespace SpotiSyncWeb.Infrastructure.Models
         {
             newListener.Session = this;
             Listeners.Add(newListener);
-
-            // Todo Notify this listener about what song to play
         }
 
-        public void SetTrack(TrackEvent track)
+        public async Task SetTrack(TrackEvent track)
         {
-
+            await Task.WhenAll(Listeners.Select(async listener => await listener.NotifyTrackChange(track)));
+            CurrentTrack = track;
         }
 
         public void RemoveListener(SocketUser removeMe)

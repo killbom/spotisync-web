@@ -49,12 +49,12 @@ namespace SpotiSyncWeb.Infrastructure.Services
             session.AddListener(listener);
         }
 
-        private void UserConnected(object sender, string userId)
+        private async void UserConnected(object sender, string userId)
         {
             var user = users.Get(userId);
 
             // Manage the websocket
-            user.Connect(sender as WebSocket);
+            await user.Connect(sender as WebSocket);
         }
     }
 }

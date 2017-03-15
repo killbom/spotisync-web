@@ -3,6 +3,7 @@ using SpotiSyncWeb.Dtos;
 using SpotiSync_Common;
 using SpotiSyncWeb.Infrastructure.Interfaces;
 using SpotiSyncWeb.Infrastructure.Models;
+using System.Threading.Tasks;
 
 namespace SpotiSyncWeb.Controllers
 {
@@ -38,7 +39,7 @@ namespace SpotiSyncWeb.Controllers
         }
 
         [HttpPost("play/{sessionId}/{userId}")]
-        public IActionResult SetTrack(string sessionId, string userId, [FromBody]TrackEvent track)
+        public async Task<IActionResult> SetTrack(string sessionId, string userId, [FromBody]TrackEvent track)
         {
             var session = sessions.GetSession(sessionId);
             var user = users.Get(userId);
@@ -48,8 +49,7 @@ namespace SpotiSyncWeb.Controllers
                 return BadRequest("You do not own this session");
             }
 
-            session.SetTrack(track);
-            sessions.JoinSession(sessionId, user);
+            await session.SetTrack(track);
 
             return Ok();
         }
